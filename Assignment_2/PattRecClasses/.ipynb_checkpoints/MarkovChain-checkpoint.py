@@ -193,8 +193,57 @@ class MarkovChain:
     def finiteDuration(self):
         pass
     
-    def backward(self):
-        pass
+    def backward(self, pX, c):
+    # Initialization
+        n, t_max = np.shape(pX)
+        beta_hat = np.zeros([n, t_max])
+        if self.is_finite:
+            beta_end = self.A[:,-1] / (c[-1]*c[-2]) # 5.65
+        else:
+            beta_end = np.ones(self.A.shape[0]) / c[-1] # 5.64
+        beta_hat[:,-1] = beta_end
+        
+    # Backward Step
+        c = np.flip(c) # reverse vector c for simplicity
+        c = c[2:] if self.is_finite else c[1:]
+        for t in range(c.shape[0]):
+            beta_hat_t = np.zeros(n)
+            for i in range(n):
+                beta_i_t = np.sum(self.A[i,:n] * pX[:,-1-t] * beta_hat[:n,-1-t]) # 5.69
+                # print(self.A[i,:self.A.shape[0]])
+                # print(pX[:self.A.shape[0],-1-t])
+                # print(beta_hat[:self.A.shape[0],-1-t])
+                beta_hat_i_t = beta_i_t / c[t] # 5.70
+                beta_hat_t[i] = beta_hat_i_t
+            beta_hat[:,-2-t] = beta_hat_t # recursive update
+            
+        return beta_hat
+
+#     def backward(self, p_x, c):
+#         beta_hat = []
+
+#         """initialization"""
+#         if self.is_finite:
+#             beta_hat0 = [beta/(c[-1]*c[-2]) for beta in self.A[:, -1]]  # eq 5.65
+#         else:
+#             beta_hat0 = [1/c[-1] for i in range(self.A.shape[0])]  # eq 5.64
+#         beta_hat.insert(0, beta_hat0)
+
+#         """backward step"""
+#         c = c[:-2] if self.is_finite else c[:-1]
+#         c = list(c)
+#         c.reverse()
+#         for t in range(len(c)):
+#             beta_hat_t = []
+#             for i in range(self.A.shape[0]):
+#                 print(self.A.shape[0])
+#                 beta_i_t = sum([p_x[j, -t-1]*self.A[i, j]*beta_hat[0][j] for j in range(self.A.shape[0])])
+#                 beta_hat_i_t = beta_i_t/c[t]
+#                 beta_hat_t.append(beta_hat_i_t)  # eq 5.70
+#             beta_hat.insert(0, beta_hat_t)
+
+#         return beta_hat
+
 
     def adaptStart(self):
         pass
