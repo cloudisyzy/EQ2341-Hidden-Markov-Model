@@ -5,8 +5,6 @@
 - [Introduction](#introduction)
 - [Installation](#installation)
 - [Usage and Structure](#usage-and-structure)
-- [Repository Structure](#repository-structure)
-
 
 ## Introduction
 
