@@ -35,7 +35,10 @@ But I cannot guarantee all scripts can be executed with no error in .py format
 - `test_state_prediction.ipynb`: Use the trained HMM to predict the state sequence of two long samples, which are also not involved in training. Plot the predicted state sequences.
 - `visualize_data.ipynb`: Display the accelerometer data in 2D and 3D fashion. Readers can ignore this script if error arises, possibly due to javascript configurations.
 
-For all .ipynb files, you don't need to change any variables, just click RUN.
+For all .ipynb files, you don't need to change any variables, just RUN each block one by one, inside the scripts there are also short comments that helps to understand.
 
-- `data`: Data collected by the authors are stored in this folder. `train.csv` is used to train HMM. `test_1.csv` and `test_2.csv` are used in validating the accuracy of predicted state of long sequences. 
-	`data/running_test`
+- `data/`: Data collected by the authors are stored in this folder. `train.csv` is used to train HMM. `test_1.csv` and `test_2.csv` are used in validating the accuracy of predicted state of long sequences. 
+	`data/running_test`, `data/walking_test`, `data/standing_test` consists of short samples of various lengths of accelerometer data from three activities, which are used in validating the classification accuracy of HMM.
+- `images/`: Stores the images used in presentation.
+- `PattRecClasses/`: Consists of core classes and functions in this project, including the basic HMM structure implemented in Assignment 1 and 2. `func.py` stores most of the newly defined functions in this project, including the BaumWelch Algorithm to train HMM.
+- `weights/`: Store the pretrained weights of HMMs, the author prefer `hmm_0511_wnd5_epoch20.pkl`
