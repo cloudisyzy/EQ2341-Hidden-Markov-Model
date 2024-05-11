@@ -171,6 +171,10 @@ class MarkovChain:
         alpha_hat = np.zeros([n,t_max])
         alpha_temp = self.q * pX[:,0] # 5.42
         c[0] = np.sum(alpha_temp) # 5.43
+        # ###
+        # if c[0] == 0.0:
+        #     c[0] = 1e-13
+        # ###
         alpha_hat[:,0] = alpha_temp / c[0] # 5.44
         
     # Forward Step
@@ -180,6 +184,10 @@ class MarkovChain:
                 alpha_update = pX[j,t] * ( alpha_hat[:,t-1] @ self.A[:,j] ) # 5.50
                 alpha_temp = np.append(alpha_temp, alpha_update) # 5.50
             c[t] = np.sum(alpha_temp, axis=0) # 5.51
+            # ###
+            # if c[t] == 0.0:
+            #     c[t] = 1e-13
+            # ###
             alpha_hat[:,t] = alpha_temp / c[t] # 5.52
             
     # Termination
