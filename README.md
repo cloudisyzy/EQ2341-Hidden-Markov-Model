@@ -42,4 +42,4 @@ For all .ipynb files, you don't need to change any variables, just RUN each bloc
 - `weights/`: Store the pretrained weights of HMMs, the author prefer `hmm_0511_wnd5_epoch20.pkl`
 
 EM (or BaumWelch) is a unsupervised method, one cannot accurately control which hidden state corresponds to which pattern. In this project case, I use the single `train.csv` file to train a three-state HMM. 
-- `It turns out that **"State 1" corresponds to "Standing"**; **"State 2" corresponds to "Walking"**; **"State 3" corresponds to "Running"**`
+- It turns out that **"State 1" corresponds to "Standing"**; **"State 2" corresponds to "Walking"**; **"State 3" corresponds to "Running"**
