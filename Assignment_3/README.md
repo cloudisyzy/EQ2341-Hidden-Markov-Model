@@ -30,12 +30,12 @@ jupyter nbconvert --to script *.ipynb
 ```
 But I cannot guarantee all scripts can be executed with no error in .py format
 
--`train.ipynb`: Train HMM using training data and EM, some key features of trained HMM are displayed.
--`test_classification.ipynb`: Use the trained HMM to classify short samples from the three classes. The short samples are not involved in training. Plot the classification accuracy and confusion matrix
--`test_state_prediction.ipynb`: Use the trained HMM to predict the state sequence of two long samples, which are also not involved in training. Plot the predicted state sequences.
--`visualize_data.ipynb`: Display the accelerometer data in 2D and 3D fashion. Readers can ignore this script if error arises, possibly due to javascript configurations.
+- `train.ipynb`: Train HMM using training data and EM, some key features of trained HMM are displayed.
+- `test_classification.ipynb`: Use the trained HMM to classify short samples from the three classes. The short samples are not involved in training. Plot the classification accuracy and confusion matrix
+- `test_state_prediction.ipynb`: Use the trained HMM to predict the state sequence of two long samples, which are also not involved in training. Plot the predicted state sequences.
+- `visualize_data.ipynb`: Display the accelerometer data in 2D and 3D fashion. Readers can ignore this script if error arises, possibly due to javascript configurations.
 
 For all .ipynb files, you don't need to change any variables, just click RUN.
 
-`data`: Data collected by the authors are stored in this folder. `train.csv` is used to train HMM. `test_1.csv` and `test_2.csv` are used in validating the accuracy of predicted state of long sequences. 
+- `data`: Data collected by the authors are stored in this folder. `train.csv` is used to train HMM. `test_1.csv` and `test_2.csv` are used in validating the accuracy of predicted state of long sequences. 
 	`data/running_test`
