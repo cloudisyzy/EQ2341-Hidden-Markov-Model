@@ -41,4 +41,5 @@ For all .ipynb files, you don't need to change any variables, just RUN each bloc
 - `PattRecClasses/`: Consists of core classes and functions in this project, including the basic HMM structure implemented in Assignment 1 and 2. `func.py` stores most of the newly defined functions in this project, including the BaumWelch Algorithm to train HMM.
 - `weights/`: Store the pretrained weights of HMMs, the author prefer `hmm_0511_wnd5_epoch20.pkl`
 
-EM (or BaumWelch) is a unsupervised method, one cannot accurately control which hidden state corresponds to which pattern. In this project case, I use the single `train.csv` file to train a three-state HMM. It turns out that **"State 1" corresponds to "Standing"**; **"State 2" corresponds to "Walking"**; **"State 3" corresponds to "Running"**.
+EM (or BaumWelch) is a unsupervised method, one cannot accurately control which hidden state corresponds to which pattern. In this project case, I use the single `train.csv` file to train a three-state HMM. 
+- `It turns out that **"State 1" corresponds to "Standing"**; **"State 2" corresponds to "Walking"**; **"State 3" corresponds to "Running"**`
