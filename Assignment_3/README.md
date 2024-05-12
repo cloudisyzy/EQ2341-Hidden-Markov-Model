@@ -8,7 +8,7 @@
 
 ## Introduction
 
-This repository hosts the code for the project of Pattern Recognition and Machine Learning course. We use HMM to classify the accelerometer data sequence (3 axis) recorded from three different human activities (Standing, Walking, Running). The best approach achieves **98.89%** classification accuracy in validation data.
+This repository hosts the code for the project of Pattern Recognition and Machine Learning course. We use HMM to classify the accelerometer data sequence (3 axis) recorded from three different human activities (Standing, Walking, Running). The best approach achieves **97.41%** classification accuracy in validation data.
 
 
 ## Installation
@@ -39,7 +39,7 @@ For all .ipynb files, you don't need to change any variables, just RUN each bloc
 	`data/running_test`, `data/walking_test`, `data/standing_test` consists of short samples of various lengths of accelerometer data from three activities, which are used in validating the classification accuracy of HMM.
 - `images/`: Stores the images used in presentation.
 - `PattRecClasses/`: Consists of core classes and functions in this project, including the basic HMM structure implemented in Assignment 1 and 2. `func.py` stores most of the newly defined functions in this project, including the BaumWelch Algorithm to train HMM.
-- `weights/`: Store the pretrained weights of HMMs, the author prefer `hmm_0511_wnd5_epoch20.pkl`
+- `weights/`: Store the pretrained weights of HMMs, the author prefer `hmm_0511_wnd5_epoch30.pkl`, which means training such a HMM use 30 iterations of BaumWelch algorithm, and a 5-order moving average is applied for data pre-processing.
 
 EM (or BaumWelch) is a unsupervised method, one cannot accurately control which hidden state corresponds to which pattern. In this project case, I use the single `train.csv` file to train a three-state HMM. 
 - It turns out that **"State 1" corresponds to "Standing"**; **"State 2" corresponds to "Walking"**; **"State 3" corresponds to "Running"**
