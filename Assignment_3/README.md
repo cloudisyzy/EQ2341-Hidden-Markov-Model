@@ -5,6 +5,7 @@
 - [Introduction](#introduction)
 - [Installation](#installation)
 - [Usage and Structure](#usage-and-structure)
+- [Message to Peer Reviewers](#message-to-peer-reviewers)
 
 ## Introduction
 
@@ -22,12 +23,6 @@ pip install -r requirements.txt
 
 ## Usage and Structure
 
-This is a small project so I primarily use Jupyter Notebooks (.ipynb) to conduct simulations. If you are unfarmiliar with this, you can also convert the notebooks to .py files using
-```bash
-jupyter nbconvert --to script *.ipynb
-```
-But I cannot guarantee all scripts can be executed with no error in .py format
-
 - `train.ipynb`: Train HMM using training data and EM, some key features of trained HMM are displayed.
 - `test_classification.ipynb`: Use the trained HMM to classify short samples from the three classes. The short samples are not involved in training. Plot the classification accuracy and confusion matrix
 - `test_state_prediction.ipynb`: Use the trained HMM to predict the state sequence of two long samples, which are also not involved in training. Plot the predicted state sequences.
@@ -43,3 +38,18 @@ For all .ipynb files, you don't need to change any variables, just RUN each bloc
 
 EM (or BaumWelch) is a unsupervised method, one cannot accurately control which hidden state corresponds to which pattern. In this project case, I use the single `train.csv` file to train a three-state HMM. 
 - It turns out that **"State 1" corresponds to "Standing"**; **"State 2" corresponds to "Walking"**; **"State 3" corresponds to "Running"**
+
+## Message to Peer Reviewers
+
+This README file is written in Markdown format. For the rendered version, you can either open it with IDEs, or copy and paste the whole content to https://dillinger.io/
+For reviewing my project, I think run all the notebooks, .ipynb files, under the root directory is enough, which involves both training and validation of my HMM performance. There are short comments that help to understand in each file. You can also refer to `Presentation.pptx` for the methodology and analysis of this project.
+This is a small project so I primarily use Jupyter Notebooks (.ipynb) to conduct simulations. If you are unfarmiliar with this, you can also convert the notebooks to .py files using
+```bash
+jupyter nbconvert --to script *.ipynb
+```
+But I cannot guarantee all scripts can be executed with no error in .py format. thx :-)
+
+
+
+
+
