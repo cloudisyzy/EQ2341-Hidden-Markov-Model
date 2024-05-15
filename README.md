@@ -41,8 +41,8 @@ EM (or BaumWelch) is a unsupervised method, one cannot accurately control which 
 
 ## Message to Peer Reviewers
 
-This README file is written in Markdown format. For the rendered version, you can either open it with IDEs, or copy and paste the whole content to https://dillinger.io/
-For reviewing my project, I think run all the notebooks, .ipynb files, under the root directory is enough, which involves both training and validation of my HMM performance. There are short comments that help to understand in each file. You can also refer to `Presentation.pptx` for the methodology and analysis of this project.
+This README file is written in Markdown format. For the rendered version, you can either open it with IDEs, or copy and paste the whole content to https://dillinger.io/<br>
+For reviewing my project, I think run all the notebooks, .ipynb files, under the root directory is enough, which involves both training and validation of my HMM performance. There are short comments that help to understand in each file. You can also refer to `Presentation.pptx` for the methodology and analysis of this project.<br>
 This is a small project so I primarily use Jupyter Notebooks (.ipynb) to conduct simulations. If you are unfarmiliar with this, you can also convert the notebooks to .py files using
 ```bash
 jupyter nbconvert --to script *.ipynb
