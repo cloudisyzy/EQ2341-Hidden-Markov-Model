@@ -5,6 +5,7 @@
 - [Introduction](#introduction)
 - [Installation](#installation)
 - [Usage and Structure](#usage-and-structure)
+- [Key Algorithms](#key-algorithms)
 - [Message to Peer Reviewers](#message-to-peer-reviewers)
 
 ## Introduction
@@ -38,6 +39,11 @@ For all .ipynb files, you don't need to change any variables, just RUN each bloc
 
 EM (or BaumWelch) is a unsupervised method, one cannot accurately control which hidden state corresponds to which pattern. In this project case, I use the single `train.csv` file to train a three-state HMM. 
 - It turns out that **"State 1" corresponds to "Standing"**; **"State 2" corresponds to "Walking"**; **"State 3" corresponds to "Running"**
+
+## Key Algorithms
+
+![Train](./images/Train.png) Expectation Maximization, or Baum-Welch Algorithm. Corresponds to `PattRecClasses.func.BaumWelch`, used to train HMM.
+![Test](./images/Test.png) Making Prediction using trained HMM, via Viterbi Algorithm or Gamma. Corresponds to `PattRecClasses.func.HMM_prediction`, used to classifying sequence or output the state sequence of given observations.
 
 ## Message to Peer Reviewers
 

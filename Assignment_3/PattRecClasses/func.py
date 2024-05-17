@@ -3,10 +3,13 @@ from .MarkovChain import MarkovChain
 import os
 import matplotlib.pyplot as plt
 from collections import Counter
+import warnings
 
 
 def load_data(path, averaging=True, window=2):
-    ## load data from .csv file, moving average is conducted if averaging=True, MA order = window, default=2
+    """
+    load data from .csv file in path, moving average is conducted if averaging=True, MA order = window, default=2
+    """
     data = np.genfromtxt(path, delimiter=',', names=True)
     x = data['x']
     y = data['y']
@@ -27,7 +30,9 @@ def load_data(path, averaging=True, window=2):
     
     
 def plot_fft(data, sample_rate):
-    ## to observe how moving average affect the high frequency components 
+    """
+    to observe how moving average affect the high frequency components 
+    """
     n, T = data.shape
     freq = np.fft.fftfreq(T, d=1/sample_rate)
     # Only show one (x) axis of data
@@ -46,9 +51,15 @@ def plot_fft(data, sample_rate):
     
 
 def compute_pX(observations, dists, scale=True):
-    ## to estimate bj(x) in textbook, observations <=> x
-    ##                                dists <=> distribution used to generate x
-    ##                                likelihood <=> bj(x) for each distribution
+    """
+    To estimate bj(x) in textbook, 
+        observations <=> x, or training sequence
+        dists <=> distribution used to generate x
+        likelihood <=> bj(x) for each distribution, or emission prob
+        
+        scale=True: returns the scaled prob (by the maximum value of each column)
+        scale=False: returns the unscaled prob
+    """
     range_dim = observations.shape[1] if observations.ndim > 1 else observations.shape[0]
     unscaled_pX = []
 
@@ -72,11 +83,17 @@ def compute_pX(observations, dists, scale=True):
 
 
 def BaumWelch(q, A, dist, data):
-    ## train HMM using Baum-Welch algorithm, equivalent to EM, data <=> observed seq
-    ##                                dist <=> source distributions
-    ##                                A <=> transition prob
-    ##                                q <=> initial prob
-    
+    """
+    Train HMM using Baum-Welch algorithm, equivalent to EM, inputs are
+        data <=> observations, or training sequence
+        dist <=> source distributions of each state
+        A <=> transition prob
+        q <=> initial prob
+        
+    Three returned variables are the updated q, A, dist.
+    Suppose to use inside iterations
+    For more details see 'images\Train.png'
+    """
     # Initialization
     mc = MarkovChain(q, A)
     pX = compute_pX(data, dist, scale=True)
@@ -146,28 +163,77 @@ def BaumWelch(q, A, dist, data):
     return q_updated, A_updated, dist_updated
 
 
-def HMM_prediction(q, A, dist, data, decision=False):
-    ## use HMM to predict the status of a given observation (data)
-    ## decision=False -> return only predicted state seq (array consists of 1, 2, 3), decided by the argmax of the conditional prob of states given observations (gamma)
-    ## decision=True -> return the hard decision of class (base on # of 1s, 2s, 3s) and state seq
-    
+
+def HMM_prediction(q, A, dist, data, decision=False, mode='gamma'):
+    """
+    Predict using HMM
+        data <=> observations
+        dist <=> trained source distributions of each state
+        A <=> trained transition prob
+        q <=> trained initial prob
+        
+        mode='gamma': predict the states using gamma, the conditional prob of state given data.
+        mode='viterbi': predict the states using viterbi algorithm, the most possible state sequence
+        
+        decision=False: returns only the predicted state sequence
+        decision=True: returns both predicted state sequence and the predicted class
+        
+    For more details see 'images\Test.png'
+    """
     # Initialization
     prefix = np.load('PattRecClasses/prefix.npy')
     data = np.concatenate((prefix, data), axis=1)
     mc = MarkovChain(q, A)
     pX = compute_pX(data, dist, scale=True)
     
-    # Forward & Backward
-    alpha_hat, c = mc.forward(pX)
-    beta_hat = mc.backward(pX, c)
-    
-    # Compute gamma, P of state # given observations
-    gamma = np.zeros_like(alpha_hat) 
-    for j in range(gamma.shape[0]):
-        for t in range(gamma.shape[1]):
-            gamma[j,t] = alpha_hat[j,t] * beta_hat[j,t] * c[t]
+    if mode == 'viterbi':
+        n_states = q.shape[0] # # of hidden states
+        T = data.shape[1] # length of obersavations
+        pred_state_seq = np.zeros(T, dtype=int)
+        
+        chi = np.zeros((n_states,T))
+        zeta = np.zeros((n_states,T-1))
+        
+        chi_j_1 = q * pX[:,0] # 5.78
+        chi[:,0] = chi_j_1
+        
+        for t in range(1, T):
+            chi_t = np.zeros(3)
+            zeta_t = np.zeros(3)
+            for j in range(n_states):
+                chi_j_t = pX[j,t] * np.max(chi[:,t-1] * A[:,j]) # 5.80
+                chi_t[j] = chi_j_t
+                zeta_j_t = np.argmax(chi[:,t-1] * A[:,j]) # 5.80
+                zeta_t[j] =  zeta_j_t
+            chi[:,t] = chi_t
+            zeta[:,t-1] = zeta_t # t-1 because zeta has one colomn less than chi
+
+        i_T = np.argmax(zeta[:,-1]) # 5.82
+        pred_state_seq[-1] = i_T
+        
+        for t_reverse in range(1, T):
+            t = T - t_reverse - 1 # update from latter idx to previous idx
+            i_t = zeta[pred_state_seq[t+1], t] # 5.82, second idx t because zeta has one colomn less than chi
+            pred_state_seq[t] = i_t
             
-    pred_state_seq = np.argmax(gamma, axis=0) + 1
+        pred_state_seq = pred_state_seq + 1
+        
+    elif mode == 'gamma':
+        # Forward & Backward
+        alpha_hat, c = mc.forward(pX)
+        beta_hat = mc.backward(pX, c)
+
+        # Compute gamma, P of state # given observations
+        gamma = np.zeros_like(alpha_hat) 
+        for j in range(gamma.shape[0]):
+            for t in range(gamma.shape[1]):
+                gamma[j,t] = alpha_hat[j,t] * beta_hat[j,t] * c[t]
+
+        pred_state_seq = np.argmax(gamma, axis=0) + 1
+        
+    else:
+        warnings.warn("Please select a correct mode from 'gamma' or 'viterbi'.", UserWarning)
+        raise RuntimeError("Execution stopped due to warning condition")
     
     if decision == False:
         return pred_state_seq
@@ -178,7 +244,9 @@ def HMM_prediction(q, A, dist, data, decision=False):
 
 
 def plot_prediction_HMM(state_seq, observations, size=(10, 6), ppi=120, title='Prediction of HMM Given Observations', save_path=None):
-    ## plot the observation seq along with the predicted states in a single plot with two scales
+    """
+    plot the observation seq along with the predicted states in a single plot with two scales
+    """
     
     plt.figure(figsize=size, dpi=ppi)
     
@@ -275,14 +343,3 @@ def plot_prediction_HMM(state_seq, observations, size=(10, 6), ppi=120, title='P
 #     # print(cov_updated)
     
 #     return q_updated, A_updated, mu_updated, cov_updated
-
-
-
-# def dist_update(old_dist, new_mu, new_cov):
-#     new_dist = []
-#     for i, state_dist in enumerate(old_dist):
-#         state_dist.means = new_mu[i]
-#         state_dist.cov = new_cov[i]
-#         new_dist.append(state_dist)
-    
-#     return new_dist
