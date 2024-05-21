@@ -143,6 +143,7 @@ def BaumWelch(q, A, dist, data):
         denominator_mu = np.sum(gamma[i,:], axis=0)
         mu_updated[i] = numerator_mu / denominator_mu # 7.70 
     # print(mu_updated)
+
     ## Update Covariances
     cov_updated = np.zeros((n_states, dist[0].cov.shape[0], dist[0].cov.shape[1]))
     for i in range(n_states):
@@ -153,6 +154,7 @@ def BaumWelch(q, A, dist, data):
         denominator_cov = np.sum(gamma[i,:], axis=0)
         cov_updated[i,:,:] = numerator_cov / denominator_cov # 7.70 
     # print(cov_updated)
+
     ## Update General Distributions
     dist_updated = []
     for i, state_dist in enumerate(dist):
@@ -278,68 +280,3 @@ def plot_prediction_HMM(state_seq, observations, size=(10, 6), ppi=120, title='P
 
     plt.show()
 
-    
-# def BaumWelch(q, A, dist, data):
-    
-#     # Initialization
-#     mc = MarkovChain(q, A)
-#     pX = compute_pX(data, dist, scale=True)
-#     n_states = q.shape[0] # # of hidden states
-#     T = data.shape[1] # length of obersavations
-    
-#     # Forward & Backward
-#     alpha_hat, c = mc.forward(pX)
-#     beta_hat = mc.backward(pX, c)
-#     # print(alpha_hat)
-#     # print(c)
-#     # print(beta_hat)
-    
-#     # Compute Gamma
-#     gamma = np.zeros_like(alpha_hat) 
-#     for j in range(gamma.shape[0]):
-#         for t in range(gamma.shape[1]):
-#             gamma[j,t] = alpha_hat[j,t] * beta_hat[j,t] * c[t] # 5.63 !!! gamma 和参考的算的不一样，怀疑是参考错误，尤其在c[t]的使用上,如果将参考中c[t]改为c[j],则结果相同，不过为转置
-#     # print(gamma)
-            
-#     # Update q
-#     q_updated = gamma[:,0] / np.sum(gamma[:,0]) # 7.54 !!! gamma 和参考的算的不一样，q肯定不一样，如果将参考中c[t]改为c[j],则结果相同
-#     # print(q_updated)
-    
-#     # Update A
-#     eps = np.zeros((n_states, n_states, T))
-#     eps_hat = np.zeros((n_states, n_states))
-#     for i in range(n_states):
-#         for j in range(n_states):
-#             for t in range(T-1):
-#                 eps[i,j,t] = alpha_hat[i,t] * A[i,j] * pX[j,t+1] * beta_hat[j,t+1] # 6.19
-#             eps_hat[i,j] = np.sum(eps[i,j,:]) # 6.12
-#     A_updated = np.zeros_like(A)      
-#     denominator_A = np.sum(eps_hat, axis=1)
-#     for i in range(eps_hat.shape[0]):
-#         A_updated[i,:] = eps_hat[i,:] / denominator_A[i] # 6.13
-#     # print(A_updated)
-        
-#     # Update B, equivalent to update the parameters of source distribution of each state
-#     ## Update Means
-#     mu_updated = np.zeros((n_states, dist[0].means.shape[0]))
-#     for i in range(n_states):
-#         temp = np.zeros_like(data)
-#         for t in range(T):
-#             temp[:,t] = gamma[i,t] * data[:,t]
-#         numerator_mu = np.sum(temp, axis=1)
-#         denominator_mu = np.sum(gamma[i,:], axis=0)
-#         mu_updated[i] = numerator_mu / denominator_mu # 7.70 ！！！gamma 和参考的算的不一样，mu肯定不一样，如果将参考中c[t]改为c[j],则结果相同
-#     # print(mu_updated)
-    
-#     ## Update Covariances
-#     cov_updated = np.zeros((n_states, dist[0].cov.shape[0], dist[0].cov.shape[1]))
-#     for i in range(n_states):
-#         temp = np.zeros((data.shape[0], data.shape[0], T)) # data.shape[0] is equivalent to dist[0].cov.shape[0]
-#         for t in range(T):
-#             temp[:,:,t] = gamma[i,t] * ( (data[:,t]-mu_updated[i,:]).reshape(n_states, -1) * (data[:,t]-mu_updated[i,:]) )
-#         numerator_cov = np.sum(temp, axis=2)
-#         denominator_cov = np.sum(gamma[i,:], axis=0)
-#         cov_updated[i,:,:] = numerator_cov / denominator_cov # 7.70 ！！！gamma 和参考的算的不一样，cov肯定不一样，如果将参考中c[t]改为c[j],则结果相同
-#     # print(cov_updated)
-    
-#     return q_updated, A_updated, mu_updated, cov_updated
